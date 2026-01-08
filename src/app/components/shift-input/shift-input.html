@@ -1,0 +1,67 @@
+<section class="container">
+  <h2>Shift Tracker</h2>
+
+  <div *ngIf="apiError">
+    <p class="error">{{ apiError }}</p>
+  </div>
+
+  <ng-container *ngFor="let shift of shifts; let i = index">
+    <div class="shift">
+      <label>
+        Start (HH:MM)
+        <input [(ngModel)]="shift.start" placeholder="08:30" (ngModelChange)="onModelChange(i)" />
+      </label>
+      <label>
+        End (HH:MM)
+        <input [(ngModel)]="shift.end" placeholder="15:30" (ngModelChange)="onModelChange(i)" />
+      </label>
+      <label>
+        Break (mins)
+        <input
+          [(ngModel)]="shift.breakMinutes"
+          type="number"
+          min="0"
+          placeholder="0"
+          (ngModelChange)="onModelChange(i)"
+        />
+      </label>
+      <button
+        (click)="removeShift(i)"
+        [style.visibility]="shifts.length > 1 && i !== 0 ? 'visible' : 'hidden'"
+        [attr.aria-hidden]="!(shifts.length > 1 && i !== 0)"
+        [disabled]="!(shifts.length > 1 && i !== 0)"
+      >
+        Remove
+      </button>
+    </div>
+  </ng-container>
+
+  <div>
+    <button (click)="addShift()">Add a New Shift</button>
+    <button (click)="calculate()">Calculate Weekly Time</button>
+  </div>
+
+  <div><button (click)="pingApi()">Ping the API</button></div>
+
+  <div *ngIf="result" class="result">
+    <h2>Weekly Summary</h2>
+    <p>
+      <b> Total Hours - </b> {{ result.totals.hours }} hours &amp;
+      {{ result.totals.minutes }} minutes
+    </p>
+    <ng-container *ngFor="let shift of result.shifts; let i = index">
+      <div class="shift-results">
+        <p>
+          <b>Shift {{ i + 1 }} hours - </b> {{ shift.hours }} hours &amp; {{ shift.mins }} minutes
+        </p>
+      </div>
+    </ng-container>
+
+    <div *ngIf="result.errors && result.errors.length">
+      <h4>Validation Issues</h4>
+      <ul>
+        <li *ngFor="let e of result.errors">{{ e }}</li>
+      </ul>
+    </div>
+  </div>
+</section>
