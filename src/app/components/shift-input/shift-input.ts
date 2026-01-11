@@ -15,6 +15,7 @@ export class ShiftInputComponent {
   shifts: Shift[] = [{ start: '06:30', end: '16:00', breakMinutes: 30 }];
   result?: CalculationResult;
   apiError?: string;
+  shiftGridGap: string = '33px';
 
   constructor(private shiftService: ShiftService, private cd: ChangeDetectorRef) {}
 
