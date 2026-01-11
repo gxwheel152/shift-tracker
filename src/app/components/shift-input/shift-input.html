@@ -6,7 +6,7 @@
   </div>
 
   <ng-container *ngFor="let shift of shifts; let i = index">
-    <div class="shift">
+    <div class="shift" [style.--container-gap]="shiftGridGap">
       <label>
         Start (HH:MM)
         <input [(ngModel)]="shift.start" placeholder="08:30" (ngModelChange)="onModelChange(i)" />
@@ -33,6 +33,24 @@
       >
         Remove
       </button>
+      <label>
+        Shift Total
+
+        <input
+          *ngIf="result; else blankTotal"
+          [value]="
+            result.shifts[i].hours > 0
+              ? result.shifts[i].hours + ' h ' + result.shifts[i].mins + ' m'
+              : ''
+          "
+          type="string"
+          \
+          disabled
+        />
+        <ng-template #blankTotal>
+          <input type="string" placeholder="calc to load ..." />
+        </ng-template>
+      </label>
     </div>
   </ng-container>
 
